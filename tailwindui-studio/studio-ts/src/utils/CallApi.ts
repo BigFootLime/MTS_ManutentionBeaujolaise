@@ -1,5 +1,5 @@
 // Base URL
-export const BASE_URL = 'https://api.manutentionbeaujolaise.com'
+export const BASE_URL = 'http://api.manutentionbeaujolaise.com'
 
 // API Call Function
 export async function CallApi(
