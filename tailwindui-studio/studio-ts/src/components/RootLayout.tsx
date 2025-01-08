@@ -73,8 +73,8 @@ function Header({
           />
         </Link>
         <div className="flex items-center gap-x-8">
-          <Button href="/process" invert={invert} className="bg-[#0000f1]">
-            Materiel d'occasion
+          <Button href="/occasion" invert={invert} className="bg-[#0000f1]">
+            Materiel d&#39;occasion
           </Button>
           <Button href="/process" invert={invert} className="bg-[#0000f1]">
             Materiel neuf

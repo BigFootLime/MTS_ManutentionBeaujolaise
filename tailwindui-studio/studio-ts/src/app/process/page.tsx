@@ -8,21 +8,13 @@ import { PageIntro } from '@/components/PageIntro'
 import { StylizedImage } from '@/components/StylizedImage'
 import { GridList, GridListItem } from '@/components/GridList'
 import { GetPicture } from '../../services/files.service'
-import { getProducts } from '../../services/products.service'
+import {
+  getProducts,
+  Product as ServiceProduct,
+} from '../../services/products.service'
 import { Button } from '@/components/Button'
 
-// Define types for product and product image
-interface ProductImage {
-  fileId: string
-  primary: boolean
-}
-
-interface Product {
-  _id: string
-  name: string
-  description: string
-  priceHT: number
-  images: ProductImage[]
+interface Product extends ServiceProduct {
   srcURL?: string // URL for the image, added dynamically
 }
 

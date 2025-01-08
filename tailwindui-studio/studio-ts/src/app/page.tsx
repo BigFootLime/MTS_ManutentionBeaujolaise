@@ -77,13 +77,13 @@ function CaseStudies({
         className="mt-24 text-[#0000f1] sm:mt-32 lg:mt-40"
       >
         <p>
-          L'entreprise Manutention Beaujolaise a été créée en 2005 par
+          L&apos;entreprise Manutention Beaujolaise a été créée en 2005 par
           Christophe Thomassoni, fort d’une expérience de plus de 30 ans dans la
           réparation des engins de manutention. Implantée au cœur des vignes du
           Beaujolais, à Blacé, en région Rhône-Alpes, notre entreprise connaît
           parfaitement les besoins spécifiques en manutention du milieu
-          viticole, mais aussi ceux de l'industrie, de l'agroalimentaire et de
-          l’artisanat. <br />
+          viticole, mais aussi ceux de l&apos;industrie, de
+          l&apos;agroalimentaire et de l’artisanat. <br />
           <br />
           Avec une équipe composée de deux techniciens et d’une secrétaire
           comptable assistante de direction, nous mettons à disposition de nos
