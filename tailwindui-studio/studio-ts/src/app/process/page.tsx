@@ -11,20 +11,34 @@ import { GetPicture } from '../../services/files.service'
 import { getProducts } from '../../services/products.service'
 import { Button } from '@/components/Button'
 
-// export const metadata = {
-//   title: 'Vente de Gerbeurs et Chariots Élévateurs',
-//   description:
-//     'Découvrez notre sélection de gerbeurs et de chariots élévateurs pour vos besoins de manutention.',
-// }
+// Define types for product and product image
+interface ProductImage {
+  fileId: string
+  primary: boolean
+}
 
-function ProductSection({ product }) {
+interface Product {
+  _id: string
+  name: string
+  description: string
+  priceHT: number
+  images: ProductImage[]
+  srcURL?: string // URL for the image, added dynamically
+}
+
+// ProductSection component props
+interface ProductSectionProps {
+  product: Product
+}
+
+function ProductSection({ product }: ProductSectionProps) {
   return (
     <Container className="group/section [counter-increment:section]">
       <div className="lg:flex lg:items-center lg:justify-end lg:gap-x-8 lg:group-even/section:justify-start xl:gap-x-20">
         <div className="flex justify-center">
           <FadeIn className="w-[33.75rem] flex-none lg:w-[45rem]">
             <StylizedImage
-              src={product.srcURL}
+              src={product.srcURL || '/Main.svg'} // Use a placeholder image if none are provided
               alt={product.name}
               width={1}
               height={1}
@@ -55,8 +69,8 @@ function ProductSection({ product }) {
 }
 
 export default function Products() {
-  const [products, setProducts] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
     fetchData()
@@ -64,45 +78,45 @@ export default function Products() {
 
   async function fetchData() {
     try {
-      const response = await getProducts()
-      if (response.status === 200) {
-        const data = await response.json()
-        fetchImages(data)
-        // setProducts(data);
-      } else {
-        console.log(response)
-        console.log('Error')
-      }
+      const data: Product[] = await getProducts()
+      fetchImages(data)
     } catch (error) {
-      console.log(error)
+      console.error('Error fetching products:', error)
     }
   }
 
-  async function fetchImages(data) {
-    const products = [...data]
-    // On boucle sur les produits
-    const promisesProduct = products.map(async (product) => {
-      const newProduct = { ...product }
-      if (product.images.find((image) => image.primary)?.fileId === undefined) {
-        return newProduct
-      }
-      // On récupère la première image du produit
-      const response = await GetPicture(
-        product.images.find((image) => image.primary).fileId,
-      )
-      // On crée une URL pour l'image
-      const url = URL.createObjectURL(response.data)
-      // On met à jour l'URL de l'image
-      newProduct.srcURL = url
-      // On retourne le produit
-      return newProduct
-    })
-    // On attend que toutes les images de tous les produits soient récupérées
-    const products2 = await Promise.all(promisesProduct)
-    // On met à jour le loading
+  async function fetchImages(data: Product[]) {
+    const productsWithImages = await Promise.all(
+      data.map(async (product) => {
+        const updatedProduct = { ...product }
+        const primaryImage = product.images.find((image) => image.primary)
+
+        if (primaryImage?.fileId) {
+          try {
+            const blob = await GetPicture(primaryImage.fileId)
+            if (blob) {
+              const url = URL.createObjectURL(blob)
+              updatedProduct.srcURL = url
+            } else {
+              updatedProduct.srcURL = '/Main.svg' // Explicitly set to null if no blob
+            }
+          } catch (error) {
+            console.error(
+              `Error fetching image for product ${product._id}:`,
+              error,
+            )
+            updatedProduct.srcURL = null // Handle errors gracefully
+          }
+        } else {
+          updatedProduct.srcURL = null // No primary image
+        }
+
+        return updatedProduct
+      }),
+    )
+
+    setProducts(productsWithImages)
     setLoading(false)
-    // On met à jour les produits
-    setProducts(products2)
   }
 
   return (
@@ -137,8 +151,8 @@ export default function Products() {
             performance.
           </GridListItem>
           <GridListItem title="Service Après-Vente">
-            Nous assurons le suivi et l'entretien de votre matériel pour une
-            utilisation sans souci.
+            Nous assurons le suivi et l&apos;entretien de votre matériel pour
+            une utilisation sans souci.
           </GridListItem>
           <GridListItem title="Livraison Rapide">
             Grâce à notre camion poids lourd, nous livrons dans les meilleurs
