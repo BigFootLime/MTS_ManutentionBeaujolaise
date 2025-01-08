@@ -8,25 +8,17 @@ import { PageIntro } from '@/components/PageIntro'
 import { StylizedImage } from '@/components/StylizedImage'
 import { GridList, GridListItem } from '@/components/GridList'
 import { GetPicture } from '../../services/files.service'
-import { getProducts } from '../../services/products.service'
+import {
+  getProducts,
+  Product as ServiceProduct,
+} from '../../services/products.service'
 import { Button } from '@/components/Button'
 
-// Define types for product and product image
-interface ProductImage {
-  fileId: string
-  primary: boolean
-}
-
-interface Product {
-  _id: string
-  name: string
-  description: string
-  priceHT: number
-  images: ProductImage[]
+interface Product extends ServiceProduct {
   srcURL?: string // URL for the image, added dynamically
+  images: { primary: boolean; fileId: string }[]
 }
 
-// ProductSection component props
 interface ProductSectionProps {
   product: Product
 }
@@ -38,7 +30,7 @@ function ProductSection({ product }: ProductSectionProps) {
         <div className="flex justify-center">
           <FadeIn className="w-[33.75rem] flex-none lg:w-[45rem]">
             <StylizedImage
-              src={product.srcURL || '/Main.svg'} // Use a placeholder image if none are provided
+              src={product.srcURL || '/Main.svg'}
               alt={product.name}
               width={1}
               height={1}
@@ -52,13 +44,11 @@ function ProductSection({ product }: ProductSectionProps) {
             <h2 className="font-display text-3xl font-medium tracking-tight text-neutral-950 sm:text-4xl">
               {product.name}
             </h2>
-            <p className="mt-6 text-base text-neutral-600">
-              {product.description}
-            </p>
+            <p className="mt-6 text-base text-neutral-600">{product.comment}</p>
             <p className="mt-2 text-lg font-bold text-neutral-800">
               {product.priceHT} €
             </p>
-            <Button href={`/product/details`} className="mt-8">
+            <Button href={`/product/details/${product._id}`} className="mt-8">
               Plus de détails
             </Button>
           </FadeIn>
@@ -78,8 +68,13 @@ export default function Products() {
 
   async function fetchData() {
     try {
-      const data: Product[] = await getProducts()
-      fetchImages(data)
+      const data = await getProducts() // Fetch products from the service
+      const extendedData: Product[] = data.map((product) => ({
+        ...product,
+        images: product.images || [], // Ensure `images` is always defined
+        srcURL: undefined, // Initialize `srcURL` property
+      }))
+      fetchImages(extendedData) // Fetch images and update products
     } catch (error) {
       console.error('Error fetching products:', error)
     }
@@ -94,21 +89,18 @@ export default function Products() {
         if (primaryImage?.fileId) {
           try {
             const blob = await GetPicture(primaryImage.fileId)
-            if (blob) {
-              const url = URL.createObjectURL(blob)
-              updatedProduct.srcURL = url
-            } else {
-              updatedProduct.srcURL = '/Main.svg' // Explicitly set to null if no blob
-            }
+            updatedProduct.srcURL = blob
+              ? URL.createObjectURL(blob)
+              : '/Main.svg'
           } catch (error) {
             console.error(
               `Error fetching image for product ${product._id}:`,
               error,
             )
-            updatedProduct.srcURL = null // Handle errors gracefully
+            updatedProduct.srcURL = '/Main.svg'
           }
         } else {
-          updatedProduct.srcURL = null // No primary image
+          updatedProduct.srcURL = '/Main.svg'
         }
 
         return updatedProduct
@@ -122,7 +114,7 @@ export default function Products() {
   return (
     <>
       <PageIntro
-        eyebrow="Nos Produits d'Occasion"
+        eyebrow="Nos Produits"
         title="Découvrez nos solutions de manutention"
       >
         <p>

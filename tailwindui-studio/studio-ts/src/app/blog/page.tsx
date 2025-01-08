@@ -33,8 +33,8 @@ export default async function Blog() {
         </p>
       </PageIntro>
 
-      <Container className="mt-24 sm:mt-32 lg:mt-40">
-        {/* <div className="space-y-24 lg:space-y-32">
+      {/* <Container className="mt-24 sm:mt-32 lg:mt-40">
+        <div className="space-y-24 lg:space-y-32">
           {articles.map((article) => (
             <FadeIn key={article.href}>
               <article>
@@ -84,8 +84,8 @@ export default async function Blog() {
               </article>
             </FadeIn>
           ))}
-        </div> */}
-      </Container>
+        </div>
+      </Container> */}
 
       <ContactSection />
     </>
