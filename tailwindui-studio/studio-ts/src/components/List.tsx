@@ -27,7 +27,7 @@ export function ListItem({
   title?: string
 }) {
   return (
-    <li className="group mt-10 first:mt-0">
+    <li className="group mt-10 text-xl first:mt-0">
       <FadeIn>
         <Border className="pt-10 group-first:pt-0 group-first:before:hidden group-first:after:hidden">
           {title && (
