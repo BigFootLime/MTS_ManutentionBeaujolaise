@@ -21,6 +21,11 @@ export default function ContactDetails() {
         >
           contact@manutentionbeaujolaise.com
         </Link>
+      </Border>
+      <Border className="mt-16 pt-16">
+        <h2 className="font-display text-base font-semibold text-neutral-950">
+          Numero de téléphone
+        </h2>
         <Link
           href="tel:+1234567890"
           className="text-neutral-600 hover:text-neutral-950"
