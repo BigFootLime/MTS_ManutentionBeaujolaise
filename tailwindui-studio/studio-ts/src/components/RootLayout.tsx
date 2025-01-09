@@ -143,10 +143,13 @@ function Navigation() {
       <NavigationRow>
         <NavigationItem href="/">Accueil</NavigationItem>
         <NavigationItem href="/about">Qui Sommes Nous</NavigationItem>
+        <NavigationItem href="/blog">Blog</NavigationItem>
       </NavigationRow>
       <NavigationRow>
-        <NavigationItem href="/process">Nos Produits</NavigationItem>
-        <NavigationItem href="/blog">Blog</NavigationItem>
+        <NavigationItem href="/process">
+          Nos Produits d&#39;Occasion
+        </NavigationItem>
+        <NavigationItem href="/neuf">Nos Produits Neuf</NavigationItem>
       </NavigationRow>
     </nav>
   )
