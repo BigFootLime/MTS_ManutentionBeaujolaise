@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { FadeIn } from '@/components/FadeIn'
 import { Button } from '@/components/Button'
+import { sendMail } from '../../services/mails.service'
 
 function TextInput({
   label,
@@ -40,13 +41,8 @@ export default function ContactForm() {
     setError(false)
 
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      })
-
-      if (response.ok) {
+      const response = await sendMail(data)
+      if (response.status === 200) {
         setSuccess(true)
         reset()
       } else {

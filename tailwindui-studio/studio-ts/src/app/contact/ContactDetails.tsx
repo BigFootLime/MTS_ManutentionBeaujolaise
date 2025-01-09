@@ -16,10 +16,16 @@ export default function ContactDetails() {
           Email
         </h2>
         <Link
-          href="mailto:contact@manutention-beaujolaise.com"
+          href="mailto:contact@manutentionbeaujolaise.com"
           className="text-neutral-600 hover:text-neutral-950"
         >
-          contact@manutention-beaujolaise.com
+          contact@manutentionbeaujolaise.com
+        </Link>
+        <Link
+          href="tel:+1234567890"
+          className="text-neutral-600 hover:text-neutral-950"
+        >
+          06 60 97 56 20
         </Link>
       </Border>
     </FadeIn>
