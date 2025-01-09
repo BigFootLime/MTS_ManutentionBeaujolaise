@@ -69,7 +69,12 @@ export default function Products() {
   async function fetchData() {
     try {
       const data = await getProducts() // Fetch products from the service
-      const extendedData: Product[] = data.map((product) => ({
+      // Filter products based on condition
+      const filteredData = data.filter(
+        (product) => product.condition === 'Occasion',
+      )
+
+      const extendedData: Product[] = filteredData.map((product) => ({
         ...product,
         images: product.images || [], // Ensure `images` is always defined
         srcURL: undefined, // Initialize `srcURL` property
