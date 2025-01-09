@@ -10,7 +10,8 @@ const navigation = [
     title: 'Company',
     links: [
       { title: 'About', href: '/about' },
-      { title: 'Process', href: '/process' },
+      { title: 'Materiel Occasion', href: '/process' },
+      { title: 'Materiel Neuf', href: '/neuf' },
       { title: 'Blog', href: '/blog' },
       { title: 'Contact us', href: '/contact' },
     ],
