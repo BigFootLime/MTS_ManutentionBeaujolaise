@@ -15,15 +15,16 @@ import {
 import { Button } from '@/components/Button'
 
 interface Product extends ServiceProduct {
-  srcURL?: string // URL for the image, added dynamically
+  srcURL?: string | null // URL for the image, added dynamically
   images: { primary: boolean; fileId: string }[]
 }
 
 interface ProductSectionProps {
   product: Product
+  onDetailsClick: (product: Product) => void
 }
 
-function ProductSection({ product }: ProductSectionProps) {
+function ProductSection({ product, onDetailsClick }: ProductSectionProps) {
   return (
     <Container className="group/section [counter-increment:section]">
       <div className="lg:flex lg:items-center lg:justify-end lg:gap-x-8 lg:group-even/section:justify-start xl:gap-x-20">
@@ -48,7 +49,7 @@ function ProductSection({ product }: ProductSectionProps) {
             <p className="mt-2 text-lg font-bold text-neutral-800">
               {product.priceHT} €
             </p>
-            <Button href={`/product/details/${product._id}`} className="mt-8">
+            <Button onClick={() => onDetailsClick(product)} className="mt-8">
               Plus de détails
             </Button>
           </FadeIn>
@@ -58,9 +59,123 @@ function ProductSection({ product }: ProductSectionProps) {
   )
 }
 
+function ProductDetailsDialog({
+  product,
+  onClose,
+}: {
+  product: Product
+  onClose: () => void
+}) {
+  const [images, setImages] = useState<
+    { _id: string; imageSrc: string; primary: boolean }[]
+  >([])
+
+  useEffect(() => {
+    fetchImages()
+  }, [])
+
+  async function fetchImages() {
+    const promises = product.images.map(async (image) => {
+      try {
+        const response = await GetPicture(image.fileId)
+        if (response instanceof Blob) {
+          const url = URL.createObjectURL(response)
+          return {
+            _id: image.fileId,
+            imageSrc: url,
+            primary: image.primary,
+          }
+        }
+        return null
+      } catch (error) {
+        console.error('Erreur lors de la récupération des images :', error)
+        return null
+      }
+    })
+    const fetchedImages = await Promise.all(promises)
+    setImages(
+      fetchedImages
+        .filter(
+          (
+            image,
+          ): image is { _id: string; imageSrc: string; primary: boolean } =>
+            image !== null,
+        )
+        .sort((a, b) => {
+          if (a.primary) return -1
+          if (b.primary) return 1
+          return 0
+        }),
+    )
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="relative w-full max-w-3xl rounded-lg bg-white p-6 shadow-lg">
+        <button
+          className="absolute right-2 top-2 text-xl font-bold text-gray-500 hover:text-gray-800"
+          onClick={onClose}
+        >
+          ×
+        </button>
+        <h2 className="mb-4 text-2xl font-bold">{product.name}</h2>
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+          {images.length > 0 ? (
+            images.map((image) => (
+              <img
+                key={image._id}
+                src={image.imageSrc}
+                alt={product.name}
+                className="h-auto max-h-48 w-full rounded-md object-cover shadow-md"
+              />
+            ))
+          ) : (
+            <p className="col-span-full text-neutral-600">
+              No images available for this product.
+            </p>
+          )}
+        </div>
+        <div className="mt-6 space-y-2">
+          <p>
+            <strong>Type:</strong> {product.type}
+          </p>
+          <p>
+            <strong>Model:</strong> {product.model}
+          </p>
+          <p>
+            <strong>Condition:</strong> {product.condition}
+          </p>
+          <p>
+            <strong>Year:</strong> {product.year}
+          </p>
+          <p>
+            <strong>Hours:</strong> {product.hours}
+          </p>
+          <p>
+            <strong>Lifting Capacity:</strong> {product.liftingCapacity}
+          </p>
+          <p>
+            <strong>Lifting Height:</strong> {product.liftingHeight}
+          </p>
+          <p>
+            <strong>Tire Type:</strong> {product.tireType}
+          </p>
+          <p>
+            <strong>Availability:</strong> {product.availability}
+          </p>
+          <p>
+            <strong>Comment:</strong> {product.comment}
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function Products() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState<boolean>(true)
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
 
   useEffect(() => {
     fetchData()
@@ -69,15 +184,14 @@ export default function Products() {
   async function fetchData() {
     try {
       const data = await getProducts() // Fetch products from the service
-      // Filter products based on condition
       const filteredData = data.filter(
-        (product) => product.condition === 'Occasion',
+        (product: ServiceProduct) => product.condition === 'Occasion',
       )
 
       const extendedData: Product[] = filteredData.map((product) => ({
         ...product,
         images: product.images || [], // Ensure `images` is always defined
-        srcURL: undefined, // Initialize `srcURL` property
+        srcURL: null, // Initialize `srcURL` property
       }))
       fetchImages(extendedData) // Fetch images and update products
     } catch (error) {
@@ -94,18 +208,17 @@ export default function Products() {
         if (primaryImage?.fileId) {
           try {
             const blob = await GetPicture(primaryImage.fileId)
-            updatedProduct.srcURL = blob
-              ? URL.createObjectURL(blob)
-              : '/Main.svg'
+            updatedProduct.srcURL =
+              blob && blob instanceof Blob ? URL.createObjectURL(blob) : null // Explicitly set null for invalid blobs
           } catch (error) {
             console.error(
               `Error fetching image for product ${product._id}:`,
               error,
             )
-            updatedProduct.srcURL = '/Main.svg'
+            updatedProduct.srcURL = null
           }
         } else {
-          updatedProduct.srcURL = '/Main.svg'
+          updatedProduct.srcURL = null
         }
 
         return updatedProduct
@@ -118,6 +231,13 @@ export default function Products() {
 
   return (
     <>
+      {selectedProduct && (
+        <ProductDetailsDialog
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+        />
+      )}
+
       <PageIntro
         eyebrow="Nos Produits"
         title="Découvrez nos solutions de manutention"
@@ -134,7 +254,11 @@ export default function Products() {
           <p>Chargement des produits...</p>
         ) : products.length > 0 ? (
           products.map((product) => (
-            <ProductSection key={product._id} product={product} />
+            <ProductSection
+              key={product._id}
+              product={product}
+              onDetailsClick={setSelectedProduct}
+            />
           ))
         ) : (
           <p>Aucun produit disponible pour le moment.</p>
