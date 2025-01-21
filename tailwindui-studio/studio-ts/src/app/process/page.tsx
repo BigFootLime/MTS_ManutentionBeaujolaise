@@ -31,7 +31,7 @@ function ProductSection({ product, onDetailsClick }: ProductSectionProps) {
       <div className="lg:flex lg:items-center lg:justify-end lg:gap-x-8 lg:group-even/section:justify-start xl:gap-x-20">
         <div className="flex justify-center">
           <FadeIn className="w-[33.75rem] flex-none lg:w-[45rem]">
-            <Image
+            <img
               src={product.srcURL || '/Main.svg'}
               alt={product.name}
               className="h-auto w-full max-w-full rounded-xl lg:max-w-[35rem] lg:justify-end lg:group-even/section:justify-start"
