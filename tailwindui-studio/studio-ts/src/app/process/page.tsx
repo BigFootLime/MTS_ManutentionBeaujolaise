@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { ContactSection } from '@/components/ContactSection'
+import Image from 'next/image'
 import { Container } from '@/components/Container'
 import { FadeIn } from '@/components/FadeIn'
 import { PageIntro } from '@/components/PageIntro'
@@ -30,13 +31,10 @@ function ProductSection({ product, onDetailsClick }: ProductSectionProps) {
       <div className="lg:flex lg:items-center lg:justify-end lg:gap-x-8 lg:group-even/section:justify-start xl:gap-x-20">
         <div className="flex justify-center">
           <FadeIn className="w-[33.75rem] flex-none lg:w-[45rem]">
-            <StylizedImage
+            <Image
               src={product.srcURL || '/Main.svg'}
               alt={product.name}
-              width={1}
-              height={1}
-              sizes="(min-width: 1024px) 41rem, 31rem"
-              className="justify-center lg:justify-end lg:group-even/section:justify-start"
+              className="h-auto w-full max-w-full rounded-xl lg:max-w-[35rem] lg:justify-end lg:group-even/section:justify-start"
             />
           </FadeIn>
         </div>

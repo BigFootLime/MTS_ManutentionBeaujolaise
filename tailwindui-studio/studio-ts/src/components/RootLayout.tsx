@@ -20,7 +20,7 @@ import { Footer } from '@/components/Footer'
 import { GridPattern } from '@/components/GridPattern'
 import { Logo, Logomark } from '@/components/Logo'
 import { Offices } from '@/components/Offices'
-import { SocialMedia } from '@/components/SocialMedia'
+// import { SocialMedia } from '@/components/SocialMedia'
 import LogoM from '@/images/LogoLight.svg'
 
 const RootLayoutContext = createContext<{
@@ -241,12 +241,12 @@ function RootLayoutInner({ children }: { children: React.ReactNode }) {
                       className="mt-6 grid grid-cols-1 gap-8 sm:grid-cols-2"
                     />
                   </div>
-                  <div className="sm:border-l sm:border-transparent sm:pl-16">
+                  {/* <div className="sm:border-l sm:border-transparent sm:pl-16">
                     <h2 className="font-display text-base font-semibold text-white">
                       Follow us
                     </h2>
                     <SocialMedia className="mt-6" invert />
-                  </div>
+                  </div> */}
                 </div>
               </Container>
             </div>
