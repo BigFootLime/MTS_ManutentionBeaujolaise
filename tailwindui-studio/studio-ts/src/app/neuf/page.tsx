@@ -95,82 +95,63 @@ function ProductDetailsDialog({
     const fetchedImages = await Promise.all(promises)
     setImages(
       fetchedImages
-        .filter(
-          (
-            image,
-          ): image is { _id: string; imageSrc: string; primary: boolean } =>
-            image !== null,
-        )
-        .sort((a, b) => {
-          if (a.primary) return -1
-          if (b.primary) return 1
-          return 0
-        }),
+        .filter((image): image is { _id: string; imageSrc: string; primary: boolean } => image !== null)
+        .sort((a, b) => (a.primary ? -1 : b.primary ? 1 : 0))
     )
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="relative w-full max-w-3xl rounded-lg bg-white p-6 shadow-lg">
-        <button
-          className="absolute right-2 top-2 text-xl font-bold text-gray-500 hover:text-gray-800"
-          onClick={onClose}
-        >
-          ×
-        </button>
-        <h2 className="mb-4 text-2xl font-bold">{product.name}</h2>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+      {/* Dialog Box avec Scrollbar */}
+      <div className="relative w-full max-w-lg sm:max-w-2xl bg-white rounded-lg shadow-lg p-4 overflow-y-auto max-h-[80vh]">
+
+        {/* Liste des images (Les unes sous les autres) */}
+        <div className="space-y-4">
           {images.length > 0 ? (
             images.map((image) => (
               <img
                 key={image._id}
                 src={image.imageSrc}
                 alt={product.name}
-                className="h-auto max-h-48 w-full rounded-md object-cover shadow-md"
+                className="w-full h-auto rounded-md shadow-md object-contain"
               />
             ))
           ) : (
-            <p className="col-span-full text-neutral-600">
-              No images available for this product.
+            <p className="text-center text-neutral-600">
+              Aucune image disponible pour ce produit.
             </p>
           )}
         </div>
-        <div className="mt-6 space-y-2">
-          <p>
-            <strong>Type:</strong> {product.type}
-          </p>
-          <p>
-            <strong>Model:</strong> {product.model}
-          </p>
-          <p>
-            <strong>Condition:</strong> {product.condition}
-          </p>
-          <p>
-            <strong>Year:</strong> {product.year}
-          </p>
-          <p>
-            <strong>Hours:</strong> {product.hours}
-          </p>
-          <p>
-            <strong>Lifting Capacity:</strong> {product.liftingCapacity}
-          </p>
-          <p>
-            <strong>Lifting Height:</strong> {product.liftingHeight}
-          </p>
-          <p>
-            <strong>Tire Type:</strong> {product.tireType}
-          </p>
-          <p>
-            <strong>Availability:</strong> {product.availability}
-          </p>
-          <p>
-            <strong>Comment:</strong> {product.comment}
-          </p>
+
+        {/* Bouton Fermer (Toujours visible en bas) */}
+        <div className="sticky bottom-0 bg-white pt-4 pb-2">
+          <button
+            className="w-full py-2 bg-red-600 text-white font-bold rounded-md hover:bg-red-700 transition"
+            onClick={onClose}
+          >
+            Fermer
+          </button>
+        </div>
+
+        {/* Infos Produit */}
+        <div className="mt-6 text-sm sm:text-base space-y-2">
+          <p><strong>Type:</strong> {product.type}</p>
+          <p><strong>Modèle:</strong> {product.model}</p>
+          <p><strong>État:</strong> {product.condition}</p>
+          <p><strong>Année:</strong> {product.year}</p>
+          <p><strong>Heures:</strong> {product.hours}</p>
+          <p><strong>Capacité de levage:</strong> {product.liftingCapacity}</p>
+          <p><strong>Hauteur de levage:</strong> {product.liftingHeight}</p>
+          <p><strong>Type de pneus:</strong> {product.tireType}</p>
+          <p><strong>Disponibilité:</strong> {product.availability}</p>
+          <p><strong>Commentaire:</strong> {product.comment}</p>
         </div>
       </div>
     </div>
   )
 }
+
+
 
 export default function Products() {
   const [products, setProducts] = useState<Product[]>([])

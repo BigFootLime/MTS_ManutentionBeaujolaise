@@ -22,6 +22,7 @@ import { Logo, Logomark } from '@/components/Logo'
 import { Offices } from '@/components/Offices'
 // import { SocialMedia } from '@/components/SocialMedia'
 import LogoM from '@/images/LogoLight.svg'
+import MobileLogo from '@/images/LogoMobile.svg'
 
 const RootLayoutContext = createContext<{
   logoHovered: boolean
@@ -67,19 +68,27 @@ function Header({
       <div className="flex items-center justify-between">
         <Link href="/" aria-label="Home">
           <Image
-            src={LogoM}
+            src={LogoM} // Desktop image
             alt="Logo"
-            className="h-32 w-auto object-contain sm:h-32"
+            className="hidden sm:block h-32 w-auto object-contain"
           />
+          <Image
+            src={MobileLogo} // Mobile image
+            alt="Logo"
+            className="block sm:hidden h-20 w-auto object-contain"
+          />
+
+
         </Link>
-        <div className="flex items-center gap-x-8">
-          <Button href="/neuf" invert={invert} className="bg-[#0000f1]">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+
+          <Button href="/neuf" invert={invert} className="bg-[#0000f1] text-xs sm:text-sm md:text-base">
             Materiel neuf
           </Button>
-          <Button href="/process" invert={invert} className="bg-[#0000f1]">
+          <Button href="/process" invert={invert} className="bg-[#0000f1] text-xs sm:text-sm md:text-base">
             Materiel d&#39;occasion
           </Button>
-          <Button href="/contact" invert={invert} className="bg-[#0000f1]">
+          <Button href="/contact" invert={invert} className="bg-[#0000f1] text-xs sm:text-sm md:text-base">
             Contactez-nous
           </Button>
           <button
