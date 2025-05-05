@@ -148,7 +148,7 @@ function Team() {
 
 export const metadata: Metadata = {
   title: 'Qui sommes nous',
-  description: 'Notre force réside dans notre expertise et notre proximité',
+  description: 'Notre force réside dans notre expérience et notre proximité',
 }
 
 export default async function About() {
@@ -158,12 +158,12 @@ export default async function About() {
     <>
       <PageIntro
         eyebrow="Qui sommes nous"
-        title="Notre force réside dans notre expertise et notre proximité"
+        title="Notre force réside dans notre expérience et notre proximité"
       >
         <p>
-          Nous croyons fermement que notre force repose sur notre expertise
-          technique et notre capacité à comprendre et répondre aux besoins
-          spécifiques de nos clients.
+          Nous croyons fermement que notre force repose sur notre expérience
+          et notre capacité à répondre aux demandesde nos clients etn vente occasion et reparations.
+
         </p>
         <div className="mt-10 max-w-2xl space-y-6 text-base">
           <p>

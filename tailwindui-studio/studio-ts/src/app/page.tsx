@@ -20,6 +20,7 @@ import chariot3 from '@/images/chariots/imgChariot3.jpg'
 import chariot4 from '@/images/chariots/imgChariot4.jpg'
 import chariot5 from '@/images/chariots/imgChariot5.jpg'
 import chariot6 from '@/images/chariots/imgChariot6.jpg'
+import atelierMB from '@/images/chariots/ImgAtelierMB.jpg'
 import { type CaseStudy, type MDXEntry, loadCaseStudies } from '@/lib/mdx'
 
 const clients = [
@@ -73,69 +74,43 @@ function CaseStudies({
   caseStudies: Array<MDXEntry<CaseStudy>>
 }) {
   return (
-    <>
-      <SectionIntro
-        title="Notre entreprise, au coeur du Beaujolais"
-        className="mt-24 text-[#0000f1] sm:mt-32 lg:mt-40"
-      >
-        <p>
-          L&apos;entreprise Manutention Beaujolaise a été créée en 2005 par
-          Christophe Thomassoni, fort d’une expérience de plus de 30 ans dans la
-          réparation des engins de manutention. Implantée au cœur des vignes du
-          Beaujolais, à Blacé, en région Rhône-Alpes, notre entreprise connaît
-          parfaitement les besoins spécifiques en manutention du milieu
-          viticole, mais aussi ceux de l&apos;industrie, de
-          l&apos;agroalimentaire et de l’artisanat. <br />
-          <br />
-          Avec une équipe composée de deux techniciens et d’une secrétaire
-          comptable assistante de direction, nous mettons à disposition de nos
-          clients notre expertise et notre savoir-faire accumulés depuis 1990.
-          Nos activités principales incluent le dépannage et l’entretien de
-          chariots élévateurs toutes marques, gerbeurs et transpalettes, avec un
-          rayon d’intervention d’environ 50 km autour de notre atelier pour
-          garantir une réactivité optimale.
-        </p>
-      </SectionIntro>
-      {/* <Container className="mt-16">
-        <FadeInStagger className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-          {caseStudies.map((caseStudy) => (
-            <FadeIn key={caseStudy.href} className="flex">
-              <article className="relative flex w-full flex-col rounded-3xl p-6 ring-1 ring-neutral-950/5 transition hover:bg-neutral-50 sm:p-8">
-                <h3>
-                  <Link href={caseStudy.href}>
-                    <span className="absolute inset-0 rounded-3xl" />
-                    <Image
-                      src={caseStudy.logo}
-                      alt={caseStudy.client}
-                      className="h-16 w-16"
-                      unoptimized
-                    />
-                  </Link>
-                </h3>
-                <p className="mt-6 flex gap-x-2 text-sm text-neutral-950">
-                  <time
-                    dateTime={caseStudy.date.split('-')[0]}
-                    className="font-semibold"
-                  >
-                    {caseStudy.date.split('-')[0]}
-                  </time>
-                  <span className="text-neutral-300" aria-hidden="true">
-                    /
-                  </span>
-                  <span>Case study</span>
-                </p>
-                <p className="mt-6 font-display text-2xl font-semibold text-neutral-950">
-                  {caseStudy.title}
-                </p>
-                <p className="mt-4 text-base text-neutral-600">
-                  {caseStudy.description}
-                </p>
-              </article>
-            </FadeIn>
-          ))}
-        </FadeInStagger>
-      </Container> */}
-    </>
+    <Container className="mt-24 sm:mt-32 lg:mt-40">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:gap-16">
+        {/* Texte à gauche (ou en haut sur mobile) */}
+        <div className="lg:w-1/2">
+          <SectionIntro
+            title="Notre entreprise, au coeur du Beaujolais"
+            className="text-[#0000f1]"
+          >
+            <p>
+              L&apos;entreprise Manutention Beaujolaise a été créée en 2005 par
+              Christophe Thomassoni, fort d’une expérience de plus de 30 ans dans la
+              réparation des engins de manutention. Implantée au cœur des vignes du
+              Beaujolais, à Blacé, en région Rhône-Alpes, notre entreprise connaît
+              parfaitement les besoins spécifiques en manutention du milieu
+              viticole, mais aussi ceux de l&apos;industrie, de
+              l&apos;agroalimentaire et de l’artisanat. <br />
+              <br />
+              Avec une équipe composée de deux techniciens et d’une secrétaire
+              comptable assistante de direction, nous mettons à disposition de nos
+              clients notre expertise et notre savoir-faire accumulés depuis 1990.
+            </p>
+          </SectionIntro>
+        </div>
+
+        {/* Image à droite (ou en bas sur mobile) */}
+        <div className="mt-8 lg:mt-0 lg:w-1/2">
+          <Image
+            src={atelierMB} // Ensure the path is correct for next/image
+            alt="Notre entreprise à Blacé"
+            width={800} // Replace with the actual width of the image
+            height={600} // Replace with the actual height of the image
+            className="w-full h-auto object-contain rounded-xl shadow-lg"
+          />
+        </div>
+      </div>
+    </Container>
+
   )
 }
 
@@ -149,8 +124,7 @@ function Services() {
       >
         <p>
           Nous mettons un point d’honneur à répondre aux besoins spécifiques de
-          nos clients, qu’ils soient issus du milieu viticole, de l’industrie,
-          ou de l’artisanat.
+          nos clients.
         </p>
       </SectionIntro>
       <Container className="mt-16">
@@ -166,23 +140,23 @@ function Services() {
           </div>
           <List className="mt-16 lg:mt-0 lg:w-1/2 lg:min-w-[33rem] lg:pl-4">
             <ListItem title="Dépannage rapide">
-              Grâce à nos deux véhicules atelier tout équipés, nous intervenons
-              en général dans les 24 heures pour les révisions, diagnostics,
-              dépannage hydraulique ou électrique, remplacement de pneus,
-              batteries, etc.
+              Grâce à nos deux véhicules atelier tout
+              équipés, nous intervenons en général dans les 24 heures pour
+              les révisions, diagnostics, dépannage hydraulique ou électrique,
+              remplacement de pneus, batteries, etc.
             </ListItem>
             <ListItem title="Rénovation et vente de matériel d’occasion">
               Un atelier dédié nous permet d’effectuer des rénovations
-              importantes, comme le remplacement de joints de culasse ou la
-              réparation de moteurs complets.
+              importantes, comme les rénovations de moteurs ou de mât...
             </ListItem>
             <ListItem title="Vente de pièces détachées">
-              Nous proposons une large gamme de pièces détachées et accessoires,
-              adaptés à tous types d’équipements.
+              Nous proposons la vente de pièces
+              détachées et accessoires pour chariots élévateurs gerbeurs et
+              transpalettes.
             </ListItem>
             <ListItem title="Livraison et transport">
-              Notre camion poids lourd et remorque abaissable permettent une
-              livraison efficace de matériels et équipements.
+              Notre camion poids lourd et notre remorque 1.5t abaissable nous permettent la
+              livraison de nos matériels et équipements.
             </ListItem>
           </List>
         </div>
@@ -202,27 +176,62 @@ export default async function Home() {
   return (
     <>
       <Container className="mt-24 sm:mt-32 md:mt-56">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-          {/* Left Section: Title and Paragraph */}
-          <FadeIn className="max-w-3xl lg:w-1/2">
-            <h1 className="font-display text-5xl font-medium tracking-tight text-[#0000f1] [text-wrap:balance] sm:text-7xl">
-              Une expertise depuis 2005.
-            </h1>
-            <p className="mt-6 text-xl text-neutral-500">
-              Vente en ligne de matériel de manutention et de stockage pour les
-              professionnels et les particuliers, nous mettons plus de 30 ans
-              d&apos;experience à votre service.
-            </p>
+        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
+          {/* Left Section: Texts stacked vertically */}
+          <div className="flex flex-col gap-16 max-w-3xl lg:w-1/2">
+            <FadeIn>
+              <h1 className="font-display text-5xl font-medium tracking-tight text-[#0000f1] [text-wrap:balance] sm:text-7xl">
+                2005-2025.
+              </h1>
+              <p className="mt-6 text-xl text-neutral-500">
+                Après 20 ans d’existence, le spécialiste du gerbeur d’occasion devient <br />
+                <span className="font-semibold text-[#0000f1]">MANUTENTION BEAUJOLAISE SAS</span>.
+                <br />
+                Thibaud Chaudy rejoint Christophe Thomassoni. C’est l’association de
+                l’expérience et du dynamisme à votre service.
+              </p>
+            </FadeIn>
+
+            <FadeIn>
+              <h1 className="font-display text-4xl font-medium tracking-tight text-[#0000f1] [text-wrap:balance] sm:text-5xl">
+                2 Activités principales.
+              </h1>
+              <p className="mt-6 text-xl text-neutral-500">
+                <span className="font-semibold text-[#0000f1]">La vente d&apos;occasion</span> <br />
+                Nous possédons un stock de gerbeurs et chariot élévateurs
+                occasion pour satisfaire vos diverses demandes.
+              </p>
+              <p className="mt-6 text-xl text-neutral-500">
+                <span className="font-semibold text-[#0000f1]">La réparation toutes marques </span> <br />
+                Nous intervenons chez vous pour réparer tout type de chariot
+                industriel et de magasinage dans les 24h.
+              </p>
+            </FadeIn>
+          </div>
+
+          {/* Right Section: Image stays the same */}
+          <FadeIn className="mt-12 w-full lg:mt-0 lg:w-[45rem] lg:flex-none ">
+            {/* Image simple sur mobile */}
+            <div className="block lg:hidden mx-auto max-w-[90%]">
+              <Image
+                src={chariot4}
+                alt="Chariot élévateur"
+                className="rounded-xl object-contain w-full h-auto"
+                width={600}
+                height={600}
+              />
+            </div>
+
+            {/* StylizedImage sur desktop */}
+            <div className="hidden lg:block">
+              <StylizedImage
+                src={chariot4}
+                sizes="(min-width: 1024px) 41rem, 31rem"
+                className="ml-auto lg:translate-x-20"
+              />
+            </div>
           </FadeIn>
 
-          {/* Right Section: StylizedImage */}
-          <FadeIn className="mt-12 w-[33.75rem] flex-none lg:mt-0 lg:w-[45rem]">
-            <StylizedImage
-              src={chariot4}
-              sizes="(min-width: 1024px) 41rem, 31rem"
-              className="justify-center lg:justify-end"
-            />
-          </FadeIn>
         </div>
       </Container>
 
