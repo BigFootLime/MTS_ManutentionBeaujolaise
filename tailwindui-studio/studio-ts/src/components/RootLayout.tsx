@@ -22,7 +22,7 @@ import { Logo, Logomark } from '@/components/Logo'
 import { Offices } from '@/components/Offices'
 // import { SocialMedia } from '@/components/SocialMedia'
 import LogoM from '@/images/LogoLight.svg'
-import MobileLogo from '@/images/LogoMobile.svg'
+// import MobileLogo from '@/images/LogoMobile.svg' // plus utilisé
 
 const RootLayoutContext = createContext<{
   logoHovered: boolean
@@ -64,33 +64,65 @@ function Header({
   let { logoHovered, setLogoHovered } = useContext(RootLayoutContext)!
 
   return (
-    <Container>
-      <div className="flex items-center justify-between">
-        <Link href="/" aria-label="Home">
-          <Image
-            src={LogoM} // Desktop image
-            alt="Logo"
-            className="hidden sm:block h-32 w-auto object-contain"
-          />
-          <Image
-            src={MobileLogo} // Mobile image
-            alt="Logo"
-            className="block sm:hidden h-20 w-auto object-contain"
-          />
+    // Ajout d'espace bas uniquement en mobile
+    <Container className="pb-8 sm:pb-0">
+      {/* Mobile: logo sur sa propre ligne centré; Desktop: inline à gauche */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        {/* Logo */}
+        <div className="flex justify-center sm:justify-start">
+          <Link href="/" aria-label="Home" className="inline-flex">
+            {/* Desktop logo */}
+            <Image
+              src={LogoM}
+              alt="Logo"
+              className="hidden sm:block h-32 w-auto object-contain"
+              priority
+            />
+            {/* Mobile: on utilise aussi le logo desktop */}
+            <Image
+              src={LogoM}
+              alt="Logo"
+              className="block sm:hidden h-20 w-auto object-contain"
+              priority
+            />
+          </Link>
+        </div>
 
+        {/* Actions: boutons + menu.
+            Mobile: pile centrée; Desktop: rangée à droite */}
+        <div
+          className={clsx(
+            'flex sm:flex-row items-center',
+            'sm:gap-x-4 gap-y-2',
+            'sm:justify-end justify-center',
+            'flex-col sm:flex-row',
+            'mt-3 sm:mt-0' // espace entre logo et boutons en mobile
+          )}
+        >
+          <div className="flex flex-row items-center sm:items-stretch gap-2 sm:gap-3">
+            <Button
+              href="/neuf"
+              invert={invert}
+              className="bg-[#0000f1] text-xs sm:text-sm md:text-base w-full sm:w-auto"
+            >
+              Materiel neuf
+            </Button>
+            <Button
+              href="/process"
+              invert={invert}
+              className="bg-[#0000f1] text-xs sm:text-sm md:text-base w-full sm:w-auto"
+            >
+              Materiel d&#39;occasion
+            </Button>
+            <Button
+              href="/contact"
+              invert={invert}
+              className="bg-[#0000f1] text-xs sm:text-sm md:text-base w-full sm:w-auto"
+            >
+              Contactez-nous
+            </Button>
+          </div>
 
-        </Link>
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-
-          <Button href="/neuf" invert={invert} className="bg-[#0000f1] text-xs sm:text-sm md:text-base">
-            Materiel neuf
-          </Button>
-          <Button href="/process" invert={invert} className="bg-[#0000f1] text-xs sm:text-sm md:text-base">
-            Materiel d&#39;occasion
-          </Button>
-          <Button href="/contact" invert={invert} className="bg-[#0000f1] text-xs sm:text-sm md:text-base">
-            Contactez-nous
-          </Button>
           <button
             ref={toggleRef}
             type="button"
@@ -98,7 +130,7 @@ function Header({
             aria-expanded={expanded ? 'true' : 'false'}
             aria-controls={panelId}
             className={clsx(
-              'group -m-2.5 rounded-full p-2.5 transition',
+              'group -m-2.5 rounded-full p-2.5 transition ml-0 sm:ml-2 mt-2 sm:mt-0',
               invert ? 'hover:bg-[#0000f1]' : 'hover:bg-blue-950/10',
             )}
             aria-label="Toggle navigation"
@@ -123,6 +155,19 @@ function NavigationRow({ children }: { children: React.ReactNode }) {
     <div className="even:mt-px sm:bg-neutral-950">
       <Container>
         <div className="grid grid-cols-1 sm:grid-cols-2">{children}</div>
+
+        {/* Mobile-only: séparateur avec le logo (même logo que desktop) */}
+        <div className="sm:hidden flex items-center justify-center py-6">
+          <div className="flex items-center gap-3">
+            <span className="h-px w-10 bg-neutral-800" />
+            <Image
+              src={LogoM}
+              alt="Logo"
+              className="h-8 w-auto opacity-80"
+            />
+            <span className="h-px w-10 bg-neutral-800" />
+          </div>
+        </div>
       </Container>
     </div>
   )
@@ -193,7 +238,8 @@ function RootLayoutInner({ children }: { children: React.ReactNode }) {
     <MotionConfig transition={shouldReduceMotion ? { duration: 0 } : undefined}>
       <header>
         <div
-          className="absolute left-0 right-0 top-2 z-40 pt-14"
+          // petit coussin bas en mobile sous la barre supérieure
+          className="absolute left-0 right-0 top-2 z-40 pt-14 pb-4 sm:pb-0"
           aria-hidden={expanded ? 'true' : false}
           // @ts-ignore (https://github.com/facebook/react/issues/17157)
           inert={expanded ? true : false}
@@ -263,14 +309,15 @@ function RootLayoutInner({ children }: { children: React.ReactNode }) {
         </motion.div>
       </header>
 
-      <motion.div
-        layout
-        style={{ borderTopLeftRadius: 40, borderTopRightRadius: 40 }}
-        className="relative flex flex-auto overflow-hidden bg-neutral-50 pt-14"
-      >
         <motion.div
           layout
-          className="relative isolate flex w-full flex-col pt-9"
+          style={{ borderTopLeftRadius: 40, borderTopRightRadius: 40 }}
+          className="relative flex flex-auto overflow-hidden bg-neutral-50 pt-28 sm:pt-32 lg:pt-36"
+        >
+
+        <motion.div
+          layout
+          className="relative isolate flex w-full flex-col pt-12"
         >
           <GridPattern
             className="absolute inset-x-0 -top-14 -z-10 h-[1000px] w-full fill-neutral-100 stroke-neutral-950/5 [mask-image:linear-gradient(to_bottom_left,white_40%,transparent_50%)]"
