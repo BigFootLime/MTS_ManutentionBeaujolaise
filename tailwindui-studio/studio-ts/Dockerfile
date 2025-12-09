@@ -29,6 +29,9 @@ COPY --from=deps /app/node_modules ./node_modules
 # Copier le code source
 COPY . .
 
+# 👉 Ajoute CETTE LIGNE pour être sûr que /app/public existe
+RUN mkdir -p public
+
 # Build de l'app Next
 RUN pnpm build
 
