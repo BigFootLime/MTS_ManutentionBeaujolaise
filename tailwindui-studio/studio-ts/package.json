@@ -43,7 +43,7 @@
     "@babel/eslint-parser": "^7.25.9",
     "eslint": "^8.56.0",
     "eslint-config-next": "15.1.9",
-    "next": "15.1.9",
+    "next": "15.4.8",
     "prettier": "^3.3.2",
     "prettier-plugin-tailwindcss": "^0.6.5",
     "sharp": "0.33.1"
