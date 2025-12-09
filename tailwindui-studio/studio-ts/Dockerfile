@@ -4,8 +4,8 @@ FROM node:20-slim AS base
 WORKDIR /app
 ENV NODE_ENV=production
 
-# On active pnpm via corepack (natif dans Node 20)
-RUN corepack enable
+# Installer pnpm globalement (sans corepack)
+RUN npm install -g pnpm@10.25.0
 
 # ---------- ETAPE DEPS : INSTALL DES DEPENDANCES ----------
 FROM base AS deps
@@ -29,7 +29,7 @@ COPY --from=deps /app/node_modules ./node_modules
 # Copier le code source
 COPY . .
 
-# 👉 Ajoute CETTE LIGNE pour être sûr que /app/public existe
+# S'assurer que /app/public existe (même vide)
 RUN mkdir -p public
 
 # Build de l'app Next
@@ -38,19 +38,21 @@ RUN pnpm build
 # ---------- ETAPE RUNNER (IMAGE FINALE) ----------
 FROM base AS runner
 
-# Créer un user non-root
+# Créer un user non-root avec un vrai HOME
 RUN addgroup --system --gid 1001 nodejs \
-  && adduser --system --uid 1001 nextjs
+  && adduser --system --uid 1001 --home /home/nextjs nextjs
 
 WORKDIR /app
+
+# HOME du user
+ENV HOME=/home/nextjs
 
 # Copier ce qui est nécessaire pour faire tourner l'app
 COPY package.json pnpm-lock.yaml* ./
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
-# Si tu as un next.config.(js|mjs|cjs|ts), il sera déjà dans le contexte build
-COPY next.config.* ./
+COPY next.config.* ./ || true
 
 USER nextjs
 
