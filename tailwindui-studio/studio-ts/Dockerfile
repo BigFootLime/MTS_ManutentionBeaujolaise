@@ -46,15 +46,17 @@ RUN addgroup --system nodejs \
   && adduser --system --ingroup nodejs nextjs
 
 # Copier uniquement ce qui est nécessaire pour run
-COPY package.json ./ 
+COPY package.json ./
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 
-# Si tu as un next.config.mjs ou next.config.js
-# et que tu veux VRAIMENT le copier, décommente une de ces lignes :
+# (Optionnel) si tu as un next.config.* et que tu en as besoin en prod :
 # COPY next.config.mjs ./next.config.mjs
 # COPY next.config.js ./next.config.js
+
+# 🔥 IMPORTANT : donner les droits à nextjs sur /app (pour .next/cache/images)
+RUN chown -R nextjs:nodejs /app
 
 USER nextjs
 
@@ -63,5 +65,5 @@ ENV HOSTNAME=0.0.0.0
 
 EXPOSE 3000
 
-# IMPORTANT : pas de pnpm au runtime -> moins de dépendances, moins d'emmerdes
+# Pas de pnpm au runtime -> on lance directement Next avec node
 CMD ["node", "node_modules/next/dist/bin/next", "start"]
