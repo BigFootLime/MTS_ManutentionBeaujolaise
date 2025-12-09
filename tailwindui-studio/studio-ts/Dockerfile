@@ -1,10 +1,10 @@
-# ---------- BASE COMMUNE ----------
+# ---------- BASE COMMUNE (pour deps + build) ----------
 FROM node:20-slim AS base
 
 WORKDIR /app
 ENV NODE_ENV=production
 
-# Installer pnpm globalement (sans corepack)
+# Installer pnpm globalement (sans Corepack)
 RUN npm install -g pnpm@10.25.0
 
 # ---------- ETAPE DEPS : INSTALL DES DEPENDANCES ----------
@@ -26,7 +26,7 @@ WORKDIR /app
 # Récupérer node_modules installés
 COPY --from=deps /app/node_modules ./node_modules
 
-# Copier le code source
+# Copier tout le code source
 COPY . .
 
 # S'assurer que /app/public existe (même vide)
@@ -36,23 +36,25 @@ RUN mkdir -p public
 RUN pnpm build
 
 # ---------- ETAPE RUNNER (IMAGE FINALE) ----------
-FROM base AS runner
-
-# Créer un user non-root avec un vrai HOME
-RUN addgroup --system --gid 1001 nodejs \
-  && adduser --system --uid 1001 --home /home/nextjs nextjs
+FROM node:20-slim AS runner
 
 WORKDIR /app
+ENV NODE_ENV=production
 
-# HOME du user
-ENV HOME=/home/nextjs
+# Créer un user non-root
+RUN addgroup --system nodejs \
+  && adduser --system --ingroup nodejs nextjs
 
-# Copier ce qui est nécessaire pour faire tourner l'app
-COPY package.json pnpm-lock.yaml* ./
+# Copier uniquement ce qui est nécessaire pour run
+COPY package.json ./ 
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
-COPY next.config.* ./ || true
+
+# Si tu as un next.config.mjs ou next.config.js
+# et que tu veux VRAIMENT le copier, décommente une de ces lignes :
+# COPY next.config.mjs ./next.config.mjs
+# COPY next.config.js ./next.config.js
 
 USER nextjs
 
@@ -61,4 +63,5 @@ ENV HOSTNAME=0.0.0.0
 
 EXPOSE 3000
 
-CMD ["pnpm", "start"]
+# IMPORTANT : pas de pnpm au runtime -> moins de dépendances, moins d'emmerdes
+CMD ["node", "node_modules/next/dist/bin/next", "start"]
